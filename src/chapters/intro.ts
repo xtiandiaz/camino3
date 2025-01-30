@@ -1,6 +1,6 @@
 import * as THREE from 'three'
-import * as STAGER from '../utils/stager'
-import Chapter from '../utils/chapter'
+import * as STAGER from '../core/stager'
+import Chapter from '../core/chapter'
 
 const stage = STAGER.setUpStage()
 
@@ -23,7 +23,7 @@ stage.scene.add(cube)
 
 const chapter: Chapter = {
   stage: stage,
-  onRender: (time: number) => {
+  onBeforeRender: (time: number) => {
     cube.rotation.x = time
     cube.rotation.y = time  
   }

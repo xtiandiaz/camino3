@@ -1,4 +1,5 @@
-import * as STAGER from './utils/stager'
-import intro from './chapters/intro'
+import * as STAGER from './core/stager'
+// import intro from './chapters/intro'
+import cards from './chapters/cards'
 
-STAGER.run(intro)
+STAGER.run(cards)

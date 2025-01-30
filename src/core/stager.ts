@@ -1,12 +1,6 @@
 import * as THREE from 'three'
 import Chapter from './chapter'
-
-export interface Stage {
-  canvas: HTMLCanvasElement
-  renderer: THREE.WebGLRenderer
-  camera: THREE.PerspectiveCamera
-  scene: THREE.Scene
-}
+import Stage from './stage'
 
 export function setUpStage(): Stage {
   const canvas = document.querySelector("#c") as HTMLCanvasElement
@@ -15,7 +9,7 @@ export function setUpStage(): Stage {
   const fov = 75
   const aspect = 2  // the canvas default
   const near = 0.1
-  const far = 5
+  const far = 10
   const camera = new THREE.PerspectiveCamera(fov, aspect, near, far)
   camera.position.z = 2
 
@@ -49,7 +43,7 @@ export function run(chapter: Chapter) {
     
     const stage = chapter.stage
     resizeStage(stage)
-    chapter.onRender(time)
+    chapter.onBeforeRender(time)
     
     stage.renderer.render(stage.scene, stage.camera)
     

@@ -11,9 +11,9 @@ const light = new THREE.DirectionalLight(color, intensity)
 light.position.set(-1, 2, 4)
 stage.scene.add(light)
 
-const boxWidth = 1
-const boxHeight = 1
-const boxDepth = 1
+const boxWidth = 2
+const boxHeight = 2
+const boxDepth = 2
 const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth)
 
 const material = new THREE.MeshPhongMaterial({color: COLOR.DarkSchemeColor.indigo})

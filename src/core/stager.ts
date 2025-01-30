@@ -10,9 +10,9 @@ export function setUpStage(): Stage {
   const fov = 75
   const aspect = 2  // the canvas default
   const near = 0.1
-  const far = 10
+  const far = 20
   const camera = new THREE.PerspectiveCamera(fov, aspect, near, far)
-  camera.position.z = 2
+  camera.position.z = 5
 
   const scene = new THREE.Scene()
   scene.background = new THREE.Color(COLOR.DarkSchemeColor.background)

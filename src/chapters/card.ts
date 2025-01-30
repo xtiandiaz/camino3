@@ -4,7 +4,7 @@ import Chapter from '../core/chapter'
 
 async function createCard(frontURL: string, backURL: string): Promise<THREE.Mesh> {
   function createFaceGeometry(): THREE.PlaneGeometry {
-    return new THREE.PlaneGeometry(3, 4)
+    return new THREE.PlaneGeometry(2, 8/3)
   }
   const frontTexture = await new THREE.TextureLoader().loadAsync(frontURL)
   const backTexture = await new THREE.TextureLoader().loadAsync(backURL)
@@ -16,7 +16,6 @@ async function createCard(frontURL: string, backURL: string): Promise<THREE.Mesh
   const fragmentShaderResponse = await fetch('assets/shaders/card_frag.glsl')
   const fragmentShader = await fragmentShaderResponse.text()
   
-  // const material = new THREE.MeshBasicMaterial({ map: textures[0] })
   const material = new THREE.ShaderMaterial({
     uniforms: {
       front_texture: { value: frontTexture },
@@ -32,28 +31,18 @@ async function createCard(frontURL: string, backURL: string): Promise<THREE.Mesh
 }
 
 const stage = STAGER.setUpStage()
-// stage.canvas.style.backgroundColor = 
 
-const cards = await Promise.all([
-  createCard(
-    'assets/textures/cards_test_front.png', 
-    'assets/textures/cards_test_back.png'
-  )
-])
+const card = await createCard(
+  'assets/textures/card/front.png', 
+  'assets/textures/card/back.png'
+)
 
-cards.forEach((card, index) => {
-  card.position.z = -5
-  // card.position.x = index == 0 ? -2 : 2
-  
-  stage.scene.add(card)
-})
+stage.scene.add(card)
 
 const chapter: Chapter = {
   stage: stage,
   onBeforeRender: (time) => {
-    cards.forEach((card, index) => {
-      card.rotation.y = index == 0 ? time : -time
-    })
+    card.rotation.y = time
   }
 }
 

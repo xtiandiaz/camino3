@@ -25,13 +25,14 @@ async function createCard(frontURL: string, backURL: string): Promise<THREE.Mesh
     vertexShader: vertexShader,
     fragmentShader: fragmentShader
   })
-  material.blending = THREE.AdditiveBlending
+  material.blending = THREE.CustomBlending
   material.side = THREE.DoubleSide
   
   return new THREE.Mesh(createFaceGeometry(), material)
 }
 
 const stage = STAGER.setUpStage()
+// stage.canvas.style.backgroundColor = 
 
 const cards = await Promise.all([
   createCard(

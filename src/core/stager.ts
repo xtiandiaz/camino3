@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import * as COLOR from '../style/design-tokens/color'
 import Chapter from './chapter'
 import Stage from './stage'
 
@@ -14,6 +15,7 @@ export function setUpStage(): Stage {
   camera.position.z = 2
 
   const scene = new THREE.Scene()
+  scene.background = new THREE.Color(COLOR.DarkSchemeColor.background)
   
   renderer.render(scene, camera)
   

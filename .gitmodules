@@ -1,0 +1,3 @@
+[submodule "design-tokens"]
+	path = submodules/design-tokens
+	url = git@github.com:xtiandiaz/design-tokens.git

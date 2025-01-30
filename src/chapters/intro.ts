@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import * as STAGER from '../core/stager'
+import * as COLOR from '../style/design-tokens/color'
 import Chapter from '../core/chapter'
 
 const stage = STAGER.setUpStage()
@@ -15,7 +16,7 @@ const boxHeight = 1
 const boxDepth = 1
 const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth)
 
-const material = new THREE.MeshPhongMaterial({color: 0x44aa88})
+const material = new THREE.MeshPhongMaterial({color: COLOR.DarkSchemeColor.indigo})
 
 const cube = new THREE.Mesh(geometry, material)
 

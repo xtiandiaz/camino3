@@ -16,7 +16,7 @@ const boxHeight = 2
 const boxDepth = 2
 const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth)
 
-const material = new THREE.MeshPhongMaterial({color: COLOR.DarkSchemeColor.indigo})
+const material = new THREE.MeshPhongMaterial({color: COLOR.value(COLOR.ColorKey.Indigo)})
 
 const cube = new THREE.Mesh(geometry, material)
 

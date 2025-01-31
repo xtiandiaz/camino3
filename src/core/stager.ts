@@ -15,7 +15,7 @@ export function setUpStage(): Stage {
   camera.position.z = 5
 
   const scene = new THREE.Scene()
-  scene.background = new THREE.Color(COLOR.DarkSchemeColor.background)
+  scene.background = new THREE.Color(COLOR.value(COLOR.ColorKey.SecondaryBackground))
   
   renderer.render(scene, camera)
   

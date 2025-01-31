@@ -3,9 +3,6 @@ import * as STAGER from '../core/stager'
 import Chapter from '../core/chapter'
 
 async function createCard(frontURL: string, backURL: string): Promise<THREE.Mesh> {
-  function createFaceGeometry(): THREE.PlaneGeometry {
-    return new THREE.PlaneGeometry(2, 8/3)
-  }
   const frontTexture = await new THREE.TextureLoader().loadAsync(frontURL)
   const backTexture = await new THREE.TextureLoader().loadAsync(backURL)
   // const textures = [frontTexture, backTexture]
@@ -27,7 +24,7 @@ async function createCard(frontURL: string, backURL: string): Promise<THREE.Mesh
   material.blending = THREE.CustomBlending
   material.side = THREE.DoubleSide
   
-  return new THREE.Mesh(createFaceGeometry(), material)
+  return new THREE.Mesh(new THREE.PlaneGeometry(2, 8/3), material)
 }
 
 const stage = STAGER.setUpStage()
@@ -39,10 +36,37 @@ const card = await createCard(
 
 stage.scene.add(card)
 
+// INTERACTION
+
+const raycaster = new THREE.Raycaster()
+const pointer = new THREE.Vector2()
+let targetRotationY = 0
+
+function onClick(event: MouseEvent) {
+  pointer.x = (event.clientX / window.innerWidth) * 2 - 1
+  pointer.y = -(event.clientY / window.innerHeight) * 2 + 1
+  // console.log(pointer)
+  
+  raycaster.setFromCamera(pointer, stage.camera)
+  const intersect = raycaster.intersectObject(card)
+  // console.log(intersect)
+  
+  if (intersect.length > 0) {
+    targetRotationY += Math.PI
+  }
+}
+
+window.addEventListener('click', onClick)
+
+// CONSOLIDATION
+
+const infoText = document.querySelector('#info') as HTMLHeadingElement
+infoText.textContent = "Tap to flip"
+
 const chapter: Chapter = {
   stage: stage,
   onBeforeRender: (time) => {
-    card.rotation.y = time
+    card.rotation.y += (targetRotationY - card.rotation.y) / 4
   }
 }
 

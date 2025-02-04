@@ -1,5 +1,5 @@
-@import "./design-tokens/typography";
-@import "./design-tokens/mixins";
+@use "./design-tokens/typography";
+@use "./design-tokens/mixins";
 
 :root {
   color-scheme: light dark;
@@ -9,8 +9,10 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   
-  @include colorAttribute('background-color', 'background');
-  @include colorAttribute('color', 'body');
+  @include mixins.color-attributes((
+    'background-color': 'background',
+    'color': 'body'
+  ));
 }
 
 html, body {
@@ -20,11 +22,16 @@ html, body {
 
 a {
   font-weight: 500;
-  @include colorAttribute('color', 'indigo');
   text-decoration: inherit;
+  
+  @include mixins.color-attributes((
+    'color': 'indigo'
+  ));
 }
 a:hover {
-  @include colorAttribute('color', 'purple');
+  @include mixins.color-attributes((
+    'color': 'purple'
+  ));
 }
 
 body {
@@ -79,7 +86,9 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  @include colorAttribute('color', 'indigo');
+  @include mixins.color-attributes((
+    'color': 'indigo'
+  ));
 }
 button:focus,
 button:focus-visible {

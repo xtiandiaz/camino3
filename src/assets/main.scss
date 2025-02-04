@@ -1,19 +1,16 @@
-@import "./design-tokens/scheming";
 @import "./design-tokens/typography";
+@import "./design-tokens/mixins";
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
   color-scheme: light dark;
-  @include scheme('background-color', 'background');
-  @include scheme('color', 'body');
-
+  
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
+  @include colorAttribute('background-color', 'background');
+  @include colorAttribute('color', 'body');
 }
 
 html, body {
@@ -23,11 +20,11 @@ html, body {
 
 a {
   font-weight: 500;
-  color: #646cff;
+  @include colorAttribute('color', 'indigo');
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  @include colorAttribute('color', 'purple');
 }
 
 body {
@@ -37,7 +34,7 @@ body {
   min-height: 100vh;
 }
 
-#app {
+#stage {
   /* max-width: 1280px; */
   height: 100%;
   width: 100%;
@@ -46,10 +43,15 @@ body {
   text-align: center;
 }
 
-#c {
+#canvas, #cssCanvas {
   width: 100%;
   height: 100%;
   display: block;
+}
+
+#cssCanvas {
+  position: absolute;
+  top: 0;
 }
 
 #info {
@@ -61,25 +63,8 @@ body {
   display: block;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vanilla:hover {
-  filter: drop-shadow(0 0 2em #3178c6aa);
-}
-
 .card {
   padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }
 
 button {
@@ -94,7 +79,7 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  @include colorAttribute('color', 'indigo');
 }
 button:focus,
 button:focus-visible {

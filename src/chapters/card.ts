@@ -1,40 +1,102 @@
 import * as THREE from 'three'
-import * as STAGER from '../core/stager'
-import Chapter from '../core/chapter'
+import { FontLoader, Font, TextGeometry } from 'three/examples/jsm/Addons.js'
+import * as STAGER from '../core/stage'
+import * as COLOR from '../assets/design-tokens/color'
 
-async function createCard(frontURL: string, backURL: string): Promise<THREE.Mesh> {
-  const frontTexture = await new THREE.TextureLoader().loadAsync(frontURL)
-  const backTexture = await new THREE.TextureLoader().loadAsync(backURL)
-  // const textures = [frontTexture, backTexture]
-  // textures.forEach((t) => t.colorSpace = THREE.SRGBColorSpace)
-
-  const vertexShaderResponse = await fetch('assets/shaders/card_vert.glsl')
-  const vertexShader = await vertexShaderResponse.text()
-  const fragmentShaderResponse = await fetch('assets/shaders/card_frag.glsl')
-  const fragmentShader = await fragmentShaderResponse.text()
-  
-  const material = new THREE.ShaderMaterial({
-    uniforms: {
-      front_texture: { value: frontTexture },
-      back_texture: { value: backTexture }
-    },
-    vertexShader: vertexShader,
-    fragmentShader: fragmentShader
-  })
-  material.blending = THREE.CustomBlending
-  material.side = THREE.DoubleSide
-  
-  return new THREE.Mesh(new THREE.PlaneGeometry(2, 8/3), material)
+interface CardTextures {
+  front: THREE.Texture
+  back: THREE.Texture
 }
 
-const stage = STAGER.setUpStage()
+class Card {
+  static size = new THREE.Vector2(2, 8/3)
+  object: THREE.Group
+  
+  private static _vertexShader: string
+  private static _fragmentShader: string
+  private static _font: Font
+  // private _mesh: THREE.Mesh
+  private _valueLabelMesh: THREE.Mesh
+  
+  constructor(textures: CardTextures, value: number) {
+    const material = Card._createMaterial(textures)
+    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(Card.size.x, Card.size.y), material)
+    this._valueLabelMesh = Card._createValueLabelMesh(value)
+    
+    this.object = new THREE.Group()
+    this.object.add(mesh)
+    this.object.add(this._valueLabelMesh)
+  }
+  
+  static async loadShaders(): Promise<void> {
+    const vertexShaderResponse = await fetch('assets/shaders/card_vert.glsl')
+    Card._vertexShader = await vertexShaderResponse.text()
+    const fragmentShaderResponse = await fetch('assets/shaders/card_frag.glsl')
+    Card._fragmentShader = await fragmentShaderResponse.text()
+  }
+  
+  static async loadFont(): Promise<void> {
+    const loader = new FontLoader()
+    Card._font = await loader.loadAsync('assets/fonts/Inter_Bold.json')
+  }
+  
+  static async loadTextures(frontURL: string, backURL: string): Promise<CardTextures> {
+    const textures = await Promise.all([
+      new THREE.TextureLoader().loadAsync(frontURL),
+      new THREE.TextureLoader().loadAsync(backURL)
+    ])
+    return { front: textures[0], back: textures[1] }
+    // const textures = [frontTexture, backTexture]
+    // textures.forEach((t) => t.colorSpace = THREE.SRGBColorSpace
+  }
+  
+  private static _createMaterial(textures: CardTextures): THREE.Material {
+    const material = new THREE.ShaderMaterial({
+      uniforms: {
+        front_texture: { value: textures.front },
+        back_texture: { value: textures.back }
+      },
+      vertexShader: Card._vertexShader,
+      fragmentShader: Card._fragmentShader
+    })
+    
+    material.blending = THREE.CustomBlending
+    material.side = THREE.DoubleSide
+    
+    return material
+  }
+  
+  private static _createValueLabelMesh(value: number): THREE.Mesh {
+    const geometry = new TextGeometry(
+      value.toString(), 
+      { font: Card._font, size: 0.3, depth: 0, curveSegments: 1 } 
+  )
+  const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: COLOR.value(COLOR.ColorKey.Mint)}))
+  mesh.position.set(-Card.size.x * 0.5 + 0.2, Card.size.y * 0.5 - 0.5, 0.1)
+  
+  return mesh
+  }
+}
+
+const stage = STAGER.createWebGLStage()
+stage.camera.position.z = 5
+stage.camera.layers.enableAll()
+
+async function createCard(frontTextureURL: string, backTextureURL: string): Promise<Card> {
+  const textures = await Card.loadTextures(frontTextureURL, backTextureURL)
+  
+  return new Card(textures, 7)
+}
+
+await Card.loadShaders()
+await Card.loadFont()
 
 const card = await createCard(
-  'assets/textures/card/front.png', 
-  'assets/textures/card/back.png'
+  'assets/card/front.png', 
+  'assets/card/back.png'
 )
 
-stage.scene.add(card)
+stage.scene.add(card.object)
 
 // INTERACTION
 
@@ -48,7 +110,7 @@ function onClick(event: MouseEvent) {
   // console.log(pointer)
   
   raycaster.setFromCamera(pointer, stage.camera)
-  const intersect = raycaster.intersectObject(card)
+  const intersect = raycaster.intersectObject(card.object)
   // console.log(intersect)
   
   if (intersect.length > 0) {
@@ -58,16 +120,11 @@ function onClick(event: MouseEvent) {
 
 window.addEventListener('click', onClick)
 
-// CONSOLIDATION
-
 const infoText = document.querySelector('#info') as HTMLHeadingElement
 infoText.textContent = "Tap to flip"
 
-const chapter: Chapter = {
-  stage: stage,
-  onBeforeRender: (time) => {
-    card.rotation.y += (targetRotationY - card.rotation.y) / 4
-  }
+stage.onBeforeRender = _ => {
+  card.object.rotation.y += (targetRotationY - card.object.rotation.y) / 4
 }
 
-export default chapter
+export default stage

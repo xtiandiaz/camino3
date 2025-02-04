@@ -1,33 +1,22 @@
 import * as THREE from 'three'
-import * as STAGER from '../core/stager'
-import * as COLOR from '../style/design-tokens/color'
-import Chapter from '../core/chapter'
+import * as STAGE from '../core/stage'
+import * as COLOR from '../assets/design-tokens/color'
 
-const stage = STAGER.setUpStage()
+const stage = STAGE.createWebGLStage()
+stage.camera.position.z = 5
 
-const color = 0xFFFFFF
-const intensity = 3
-const light = new THREE.DirectionalLight(color, intensity)
+const light = new THREE.DirectionalLight(0xFFFFFF, 3)
 light.position.set(-1, 2, 4)
 stage.scene.add(light)
 
-const boxWidth = 2
-const boxHeight = 2
-const boxDepth = 2
-const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth)
-
+const geometry = new THREE.BoxGeometry(2, 2, 2)
 const material = new THREE.MeshPhongMaterial({color: COLOR.value(COLOR.ColorKey.Indigo)})
-
 const cube = new THREE.Mesh(geometry, material)
-
 stage.scene.add(cube)
 
-const chapter: Chapter = {
-  stage: stage,
-  onBeforeRender: (time: number) => {
-    cube.rotation.x = time
-    cube.rotation.y = time  
-  }
+stage.onBeforeRender = time => {
+  cube.rotation.x = time
+  cube.rotation.y = time
 }
 
-export default chapter
+export default stage

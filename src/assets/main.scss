@@ -1,5 +1,5 @@
 @use "./design-tokens/typography";
-@use "./design-tokens/mixins";
+@use "./design-tokens/palette";
 
 :root {
   color-scheme: light dark;
@@ -9,7 +9,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   
-  @include mixins.color-attributes((
+  @include palette.color-attributes((
     'background-color': 'background',
     'color': 'body'
   ));
@@ -24,12 +24,12 @@ a {
   font-weight: 500;
   text-decoration: inherit;
   
-  @include mixins.color-attributes((
+  @include palette.color-attributes((
     'color': 'indigo'
   ));
 }
 a:hover {
-  @include mixins.color-attributes((
+  @include palette.color-attributes((
     'color': 'purple'
   ));
 }
@@ -86,7 +86,7 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  @include mixins.color-attributes((
+  @include palette.color-attributes((
     'color': 'indigo'
   ));
 }

@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { CSS3DObject } from 'three/examples/jsm/Addons.js'
 import * as STAGER from '../core/stage'
 
-const stage = STAGER.createStageCSS({ fov: 75, near: 0.1, far: 5000 })
+const stage = STAGER.createStage3DCSS({ fov: 75, near: 0.1, far: 5000 })
 stage.camera.position.z = 750
 
 const assetsResponse = await fetch('./assets/card_css/index.html')

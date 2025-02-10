@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { FontLoader, Font, TextGeometry } from 'three/examples/jsm/Addons.js'
 import * as STAGER from '../core/stage'
-import * as COLOR from '../assets/design-tokens/color'
+import * as PALETTE from '../assets/design-tokens/palette'
 
 interface CardTextures {
   front: THREE.Texture
@@ -71,14 +71,14 @@ class Card {
       value.toString(), 
       { font: Card._font, size: 0.3, depth: 0, curveSegments: 1 } 
   )
-  const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: COLOR.value(COLOR.ColorKey.Mint)}))
+  const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: PALETTE.color(PALETTE.ColorKey.Mint)}))
   mesh.position.set(-Card.size.x * 0.5 + 0.2, Card.size.y * 0.5 - 0.5, 0.1)
   
   return mesh
   }
 }
 
-const stage = STAGER.createWebGLStage()
+const stage = STAGER.createStage3D()
 stage.camera.position.z = 5
 stage.camera.layers.enableAll()
 
